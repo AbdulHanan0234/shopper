@@ -10,7 +10,7 @@ import { LoginSignup } from "./Pages/LoginSignup";
 function App() {
   return (
     <>
-      <BrowserRouter>
+      <BrowserRouter >
         <Navbar />
         <Routes>
           <Route path="/" element={<Shop />} />

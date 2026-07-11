@@ -1,12 +1,9 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import "./Navbar.css";
 import logo from "../Assets/logo.png";
 import carticon from "../Assets/cart_icon.png";
 
 export const Navbar = () => {
-  const [menu, setMenu] = useState("shop");
-
   return (
     <div className="navbar">
       <div className="nav-logo">
@@ -15,51 +12,52 @@ export const Navbar = () => {
       </div>
 
       <ul className="nav-menu">
-        <li
-          onClick={() => {
-            setMenu("shop");
-          }}
-        >
-          <Link to="/" className="nav-link">
-            Shop
-          </Link>
-          {menu === "shop" ? <hr /> : <></>}
+        <li>
+          <NavLink to="/" className="nav-link">
+            {({ isActive }) => (
+              <>
+                Shop
+                {isActive ? <hr /> : null}
+              </>
+            )}
+          </NavLink>
         </li>
-        <li
-          onClick={() => {
-            setMenu("men");
-          }}
-        >
-          <Link to="/men" className="nav-link">
-            Men
-          </Link>
-          {menu === "men" ? <hr /> : <></>}
+
+        <li>
+          <NavLink to="/men" className="nav-link">
+            {({ isActive }) => (
+              <>
+                Men
+                {isActive ? <hr /> : null}
+              </>
+            )}
+          </NavLink>
         </li>
-        <li
-          onClick={() => {
-            setMenu("women");
-          }}
-        >
-          <Link to="/women" className="nav-link">
-            Women
-          </Link>
-          {menu === "women" ? <hr /> : <></>}
+
+        <li>
+          <NavLink to="/women" className="nav-link">
+            {({ isActive }) => (
+              <>
+                Women
+                {isActive ? <hr /> : null}
+              </>
+            )}
+          </NavLink>
         </li>
-        <li
-          onClick={() => {
-            setMenu("kids");
-          }}
-        >
-          <Link to="/kids" className="nav-link">
-            Kids
-          </Link>
-          {menu === "kids" ? <hr /> : <></>}
+
+        <li>
+          <NavLink to="/kids" className="nav-link">
+            {({ isActive }) => (
+              <>
+                Kids
+                {isActive ? <hr /> : null}
+              </>
+            )}
+          </NavLink>
         </li>
       </ul>
+
       <div className="nav-login-cart">
-        {/* <Link to="/login" className="nav-link">
-                  <button onClick={() => { setMenu("login") }}>Login {menu === "login" && <></>}</button>
-        </Link> */}
         <Link to="/login" className="nav-link">
           <button>Login</button>
         </Link>

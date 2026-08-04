@@ -1,5 +1,5 @@
-// const dns = require("dns");
-// dns.setServers(["8.8.8.8", "8.8.4.4"]);
+const dns = require("dns");
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 const port = process.env.PORT || 4000;
 const express = require("express");
@@ -12,10 +12,11 @@ const path = require("path");
 
 app.use(express.json());
 app.use(cors());
+app.set('trust proxy', 1);
 
 //Database Connection with MongoDB
 
-mongoose.connect("mongodb+srv://usershopper:shopper@cluster0.pukyaae.mongodb.net/Cluster0");
+mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://usershopper:shopper@cluster0.pukyaae.mongodb.net/Cluster0");
 
 //API Creation
 
@@ -37,9 +38,10 @@ const upload = multer({storage: storage})
 // Creating Upload Endpoint for Images
 app.use("/images",express.static("upload/images"))
 app.post("/upload",upload.single("product"),(req,res)=>{
+    const baseUrl = `${req.protocol}://${req.get('host')}`;
     res.json({
         success: 1,
-        image_url: `http://localhost:${port}/images/${req.file.filename}`
+        image_url: `${baseUrl}/images/${req.file.filename}`
     })
 })
 
@@ -84,9 +86,6 @@ app.post("/addproduct",async (req,res)=>{
     let products = await Product.find({});
     let id;
     if (products.length>0) {
-        // let last_product_array = products.slice(-1);
-        // let last_product = last_product_array[0];
-        // id = last_product.id + 1;
         id = products[products.length-1].id + 1;
     } else {
         id = 1;

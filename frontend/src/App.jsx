@@ -1,5 +1,4 @@
 import { Navbar } from "./Components/Navbar/Navbar";
-import "./App.css";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import { Shop } from "./Pages/Shop";
 import { ShopCategory } from "./Pages/ShopCategory";

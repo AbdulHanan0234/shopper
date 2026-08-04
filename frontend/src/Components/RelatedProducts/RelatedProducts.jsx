@@ -1,14 +1,23 @@
+import { useState, useEffect } from "react";
 import "./RelatedProducts.css";
-import data_product from "../Assets/data";
 import { Item } from "../Item/Item";
 
-const RelatedProducts = () => {
+const RelatedProducts = ({ category }) => {
+  const [relatedProducts, setRelatedProducts] = useState([]);
+
+  useEffect(() => {
+    if (!category) return;
+    fetch(`http://localhost:4000/relatedproducts?category=${category}`)
+      .then((res) => res.json())
+      .then((data) => setRelatedProducts(data));
+  }, [category]);
+
   return (
     <div className="relatedproducts">
       <h1>Related Products</h1>
       <hr />
       <div className="relatedproducts-item">
-        {data_product.map((item, i) => {
+        {relatedProducts.map((item, i) => {
           return (
             <Item
               key={i}
@@ -26,3 +35,4 @@ const RelatedProducts = () => {
 };
 
 export default RelatedProducts;
+

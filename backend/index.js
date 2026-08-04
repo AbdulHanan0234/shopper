@@ -218,6 +218,18 @@ app.get('/popularinwomen',async (req,res)=>{
     res.send(popular_in_women);
 })
 
+// Creating Endpoint for Related Products
+app.get('/relatedproducts', async (req, res) => {
+    const { category } = req.query;
+    if (!category) {
+        return res.status(400).json({ success: false, error: "Category is required" });
+    }
+    let products = await Product.find({ category: category });
+    let related = products.slice(0, 4);
+    console.log('Related products fetched for category:', category);
+    res.send(related);
+})
+
 //creating middleware to fetch user
 const fetchUser =async(req,res,next)=>{
     const token= req.header('auth-token');

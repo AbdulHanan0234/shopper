@@ -1,7 +1,7 @@
-const dns = require("dns");
-dns.setServers(["8.8.8.8", "8.8.4.4"]);
+// const dns = require("dns");
+// dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
-const port = 4000;
+const port = process.env.PORT || 4000;
 const express = require("express");
 const app = express();
 const cors = require("cors");

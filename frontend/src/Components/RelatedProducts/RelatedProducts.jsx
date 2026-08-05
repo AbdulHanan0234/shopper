@@ -7,7 +7,7 @@ const RelatedProducts = ({ category }) => {
 
   useEffect(() => {
     if (!category) return;
-    fetch(`http://localhost:4000/relatedproducts?category=${category}`)
+    fetch(`${import.meta.env.VITE_API_URL}/relatedproducts?category=${category}`)
       .then((res) => res.json())
       .then((data) => setRelatedProducts(data));
   }, [category]);

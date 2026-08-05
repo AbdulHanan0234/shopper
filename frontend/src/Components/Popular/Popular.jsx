@@ -8,6 +8,7 @@ export const Popular = () => {
   const[popularProducts,setPopularProducts] = useState([]);
 
   useEffect(()=>{
+    console.log(import.meta.env.VITE_API_URL)
     fetch(`${import.meta.env.VITE_API_URL}/popularinwomen`)
     .then((response)=>response.json())
     .then((data)=>setPopularProducts(data))

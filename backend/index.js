@@ -126,15 +126,24 @@ app.post("/addproduct",async (req,res)=>{
     })
 })
 
-//Creating API for Deleting Products
+//Creating API for Deleting Products from cloudinary and database
 
 app.post("/removeproduct",async (req,res)=>{
+    const product = await Product.findOne({id: req.body.id});
     await Product.findOneAndDelete({id: req.body.id});
-    console.log("Product Removed");
-    res.json({
-        success: true,
-        name: req.body.name,
-    })
+    const imagePublicId = "products/" + product.image.split('/').pop().split('.')[0];
+    await cloudinary.uploader.destroy(imagePublicId, (err, result) => {
+        if (err) {
+            console.error("Cloudinary Destroy Error:", err);
+            return res.status(500).json({ success: 0, error: err.message });
+        }
+        console.log("Product Removed");
+        res.json({
+            success: true,
+            name: req.body.name,
+        });
+    });
+
 })
 
 //Creating API for Getting All Products

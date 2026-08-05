@@ -1,5 +1,13 @@
+require("dotenv").config();
 const dns = require("dns");
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
+
+const cloudinary = require("cloudinary").v2;
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const port = process.env.PORT || 4000;
 const express = require("express");
@@ -24,26 +32,35 @@ app.get("/",(req,res)=>{
     res.send("Express App is Running");
 })
 
-// Image Storage Engine
+// Image Storage Engine using Memory Storage for Cloudinary
 
-const storage = multer.diskStorage({
-    destination: './upload/images',
-    filename: (req, file, cb) => {
-        return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+// Creating Upload Endpoint for Images via Cloudinary
+app.use("/images", express.static("upload/images"));
+
+app.post("/upload", upload.single("product"), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ success: 0, message: "No file uploaded" });
     }
-})
 
-const upload = multer({storage: storage})
+    const stream = cloudinary.uploader.upload_stream(
+        { folder: "products" },
+        (error, result) => {
+            if (error) {
+                console.error("Cloudinary Upload Error:", error);
+                return res.status(500).json({ success: 0, error: error.message });
+            }
+            res.json({
+                success: 1,
+                image_url: result.secure_url
+            });
+        }
+    );
 
-// Creating Upload Endpoint for Images
-app.use("/images",express.static("upload/images"))
-app.post("/upload",upload.single("product"),(req,res)=>{
-    const baseUrl = `${req.protocol}://${req.get('host')}`;
-    res.json({
-        success: 1,
-        image_url: `${baseUrl}/images/${req.file.filename}`
-    })
-})
+    stream.end(req.file.buffer);
+});
 
 // Schema for creating products 
 
